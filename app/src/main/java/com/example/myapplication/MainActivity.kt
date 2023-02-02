@@ -16,7 +16,7 @@ import com.example.myapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: MainViewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
+    //private val viewModel: MainViewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -40,10 +40,10 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        viewModel.text.observe(this, Observer<String> {newText -> binding.liveDataText.text = newText})
+        //viewModel.text.observe(this, Observer<String> {newText -> binding.liveDataText.text = newText})
 
         binding.changeTextButton.setOnClickListener {
-            viewModel.text.value = binding.editText.text.toString()
+            //viewModel.text.value = binding.editText.text.toString()
         }
 
     }

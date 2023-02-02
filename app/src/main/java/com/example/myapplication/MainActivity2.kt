@@ -6,10 +6,14 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.RadioButton
+import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.ActivityMain2Binding
 
 class MainActivity2 : AppCompatActivity() {
     private lateinit var binding: ActivityMain2Binding
+
+    private val viewModel: MainViewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
+
 
     var radioInt1: Int = 0
     var radioInt2: Int = 0
@@ -25,6 +29,18 @@ class MainActivity2 : AppCompatActivity() {
 
         var textView = binding.radioTextView
         var radioGroup = binding.radioGroup1
+        viewModel.savedState.observe(this) {
+            if (it.isEmpty()) {
+                saveRadioInts()
+                viewModel.saveSt(radioInt1, radioInt2, radioInt3, textViewInt)
+            } else {
+                var radioInt1 = it["KEY1"]
+                var radioInt2 = it["KEY2"]
+                var radioInt3 = it["KEY3"]
+                var textViewInt = it["KEY4"]
+            }
+        }
+
 
         saveRadioInts()
         //textViewInt = binding.radioTextView.text.toString().toInt()
@@ -43,6 +59,7 @@ class MainActivity2 : AppCompatActivity() {
 
     }
 
+    /*
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(KEY1, radioInt1)
         outState.putInt(KEY2, radioInt2)
@@ -63,11 +80,12 @@ class MainActivity2 : AppCompatActivity() {
 
         }
         super.onRestoreInstanceState(savedInstanceState)
-    }
+    }*/
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.item1 -> {
@@ -95,7 +113,7 @@ class MainActivity2 : AppCompatActivity() {
         }
     }
 
-    fun saveRadioInts() {
+     fun saveRadioInts() {
         radioInt1 = binding.firstRadioButton.text.toString().toInt()
         radioInt2 = binding.secondRadioButton.text.toString().toInt()
         radioInt3 = binding.thirdRadioButton.text.toString().toInt()
