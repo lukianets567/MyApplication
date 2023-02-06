@@ -3,14 +3,20 @@ package com.example.myapplication
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.ActivityMain2Binding
 
 class MainActivity2 : AppCompatActivity() {
     private lateinit var binding: ActivityMain2Binding
+    lateinit var radioGroup: RadioGroup
+    lateinit var textView: TextView
 
     private val viewModel: MainViewModel by lazy { ViewModelProvider(this)[MainViewModel::class.java] }
 
@@ -27,22 +33,31 @@ class MainActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        var textView = binding.radioTextView
-        var radioGroup = binding.radioGroup1
-        viewModel.savedState.observe(this) {
-            if (it.isEmpty()) {
-                saveRadioInts()
-                viewModel.saveSt(radioInt1, radioInt2, radioInt3, textViewInt)
-            } else {
-                var radioInt1 = it["KEY1"]
-                var radioInt2 = it["KEY2"]
-                var radioInt3 = it["KEY3"]
-                var textViewInt = it["KEY4"]
+        textView = binding.radioTextView
+        radioGroup = binding.radioGroup1
+
+
+//        viewModel.savedState.observe(this) {
+//            if (it.isNotEmpty()) {
+//                binding.firstRadioButton.text = it[KEY1].toString()
+//                binding.secondRadioButton.text = it[KEY2].toString()
+//                binding.thirdRadioButton.text = it[KEY3].toString()
+//                textView.text = it[KEY4].toString()
+//            }
+//            Log.d("MAP",  viewModel.savedState.value?.values.toString())
+//        }
+        if (viewModel.savedState.value?.isNotEmpty() == true) {
+            viewModel.savedState.value?.also {
+                binding.firstRadioButton.text = it[KEY1].toString()
+                binding.secondRadioButton.text = it[KEY2].toString()
+                binding.thirdRadioButton.text = it[KEY3].toString()
+                textView.text = it[KEY4].toString()
             }
+
         }
+        Log.d("MAP",  viewModel.savedState.value?.values.toString())
 
-
-        saveRadioInts()
+        changeTextViewIntAndSaveRadioInts()
         //textViewInt = binding.radioTextView.text.toString().toInt()
 
         //Записати у числову змінну значення з текстового поля
@@ -53,7 +68,7 @@ class MainActivity2 : AppCompatActivity() {
                 textView.text = text
                 textViewInt = text.toString().toInt()
                 //Присвоїти числовій змінній таке ж значення
-
+                viewModel.saveSt(radioInt1, radioInt2, radioInt3, textViewInt)
             }
         }
 
@@ -92,32 +107,41 @@ class MainActivity2 : AppCompatActivity() {
                 binding.firstRadioButton.text = "10"
                 binding.secondRadioButton.text = "20"
                 binding.thirdRadioButton.text = "30"
-                saveRadioInts()
+                changeTextViewIntAndSaveRadioInts()
                 true
             }
             R.id.item2 -> {
                 binding.firstRadioButton.text = "40"
                 binding.secondRadioButton.text = "50"
                 binding.thirdRadioButton.text = "60"
-                saveRadioInts()
+                changeTextViewIntAndSaveRadioInts()
                 true
             }
             R.id.item3 -> {
                 binding.firstRadioButton.text = "70"
                 binding.secondRadioButton.text = "80"
                 binding.thirdRadioButton.text = "90"
-                saveRadioInts()
+                changeTextViewIntAndSaveRadioInts()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-     fun saveRadioInts() {
+//     fun saveRadioInts() {
+//        radioInt1 = binding.firstRadioButton.text.toString().toInt()
+//        radioInt2 = binding.secondRadioButton.text.toString().toInt()
+//        radioInt3 = binding.thirdRadioButton.text.toString().toInt()
+//        textViewInt = binding.radioTextView.text.toString().toInt()
+//    }
+
+    fun changeTextViewIntAndSaveRadioInts() {
+        textView.text = radioGroup.findViewById<RadioButton>(radioGroup.checkedRadioButtonId).text
         radioInt1 = binding.firstRadioButton.text.toString().toInt()
         radioInt2 = binding.secondRadioButton.text.toString().toInt()
         radioInt3 = binding.thirdRadioButton.text.toString().toInt()
         textViewInt = binding.radioTextView.text.toString().toInt()
+        viewModel.saveSt(radioInt1, radioInt2, radioInt3, textViewInt)
     }
 
     companion object {

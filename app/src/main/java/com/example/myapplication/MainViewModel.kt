@@ -5,11 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
-    val text: MutableLiveData<String> by lazy { MutableLiveData<String>() }
-    val savedState: LiveData<Map<String, Int>> get() = savedState1
-    val savedState1 = MutableLiveData<Map<String, Int>>()
+    private val _savedState = MutableLiveData<Map<String, Int>>()
+    val savedState: LiveData<Map<String, Int>> = _savedState
 
     fun saveSt(radioInt1:Int, radioInt2: Int, radioInt3: Int, textViewIntValue: Int){
-        savedState1.value = mapOf("KEY1" to radioInt1, "KEY2" to radioInt2, "KEY3" to radioInt3, "KEY4" to textViewIntValue)
+        _savedState.value = mapOf("RADIO_1" to radioInt1, "RADIO_2" to radioInt2, "RADIO_3" to radioInt3, "TEXT_1" to textViewIntValue)
     }
 }
